@@ -1,4 +1,5 @@
 import src.application.character_creation as CharacterCreationService
+from src.utils.utils import Utils 
 
 class ConsoleUi:
     def __init__(self, repository):
@@ -26,23 +27,20 @@ class ConsoleUi:
         char_class = ConsoleUi.ask_choice("Escolha a classe (warrior, mage, rogue): ", ConsoleUi.VALID_CLASSES)
         distribution = ConsoleUi.ask_choice("Distribuição de atributos (classic, heroic, adventurer): ", ConsoleUi.VALID_DISTRIBUTIONS)
 
-        strong_attr = None
-        if distribution == "adventurer":
-            strong_attr = ConsoleUi.ask_choice(
-                "Escolha o atributo forte (strength, dexterity, constitution, intelligence, wisdom, charisma): ",
-                ConsoleUi.VALID_ATTRIBUTES
-            )
-
         return {
             "name": name,
             "race": race,
             "class": char_class,
-            "distribution": distribution,
-            "strong_attr": strong_attr
+            "distribution": distribution
         }
         
     def create_character(self):
         data = ConsoleUi.get_character_data()
+        rolls = ConsoleUi.roll_attributes_for_style(data["distribution"])
+        rolls = ConsoleUi.organize_attributes(rolls, data["distribution"])
+        
+        data["attributes_distribution"] = rolls
+
         character = CharacterCreationService.CharacterCreationService.create_character(
             data, repository=self.repository
         )
@@ -68,7 +66,7 @@ class ConsoleUi:
         if characters:
             print("\n📜 Personagens cadastrados:")
             for c in characters:
-                print(f"- {c['name']} ({c['race']} {c['class']})")
+                print(f"- {c['name']} ({c['race']} {c['class']})\n")
         else:
             print("\n⚠️ Nenhum personagem criado ainda.")
             
@@ -120,3 +118,54 @@ class ConsoleUi:
         print("\n🧬 Atributos do personagem:")
         for k, v in attrs.items():
             print(f"- {k.capitalize()}: {v}")
+
+    def roll_attributes_for_style(distribution_style):
+        input("\n🎲 Deseja jogar o dado? Pressione Enter para rolar...")
+
+        rolls = []
+
+        if distribution_style == "classic" or distribution_style == "adventurer":
+            # 3d6 seis vezes
+            rolls = [Utils.roll_3d6() for _ in range(6)]
+        elif distribution_style == "heroic":
+            # 4d6 drop lowest seis vezes
+            rolls = [Utils.roll_4d6_drop_lowest() for _ in range(6)]
+        else:
+            raise ValueError("Distribuição inválida!")
+
+        print(f"\nRolagens obtidas ({distribution_style}): {rolls}")
+        return rolls
+    
+    @staticmethod
+    def organize_attributes(rolls, distribution):
+        
+        if (distribution == "classic"):
+            return rolls  # classic não precisa organizar
+        
+        attributes_names = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
+        attributes = {}
+        available_rolls = rolls.copy()
+
+        print("\n--- Distribuição dos atributos ---")
+        print(f"Rolagens disponíveis: {available_rolls}")
+
+        for attr in attributes_names:
+            for _ in range(3):  # dá até 3 tentativas pro user escolher certo
+                print(f"\nEscolha um valor para {attr}: {available_rolls}")
+                try:
+                    choice = int(input("> "))
+                    if choice in available_rolls:
+                        attributes[attr] = choice
+                        available_rolls.remove(choice)
+                        break
+                    else:
+                        print("⚠ Valor inválido, tente novamente.")
+                except ValueError:
+                    print("⚠ Digite um número válido.")
+            else:
+                # se saiu do for sem dar break, atribui automaticamente o primeiro valor disponível
+                auto = available_rolls.pop(0)
+                print(f"❌ Tentativas esgotadas. {attr} recebeu automaticamente {auto}.")
+                attributes[attr] = auto
+
+        return attributes

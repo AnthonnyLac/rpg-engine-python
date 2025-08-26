@@ -8,7 +8,7 @@ class CharacterCreationService:
             data["race"],
             data["class"],
             data["distribution"],
-            data.get("strong_attr")
+            data.get("attributes_distribution")
         )
         
         # Se for passado um repositório, salva imediatamente
@@ -21,3 +21,4 @@ class CharacterCreationService:
                 repository.save("character", character)
         
         return character            
+ 

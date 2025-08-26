@@ -8,7 +8,7 @@ from src.domain.models.character import Character
 
 class CharacterFactory:
     @staticmethod
-    def create(name, race_type, class_type, distribution="classic", strong_attribute=None):
+    def create(name, race_type, class_type, distribution="classic", attributes_distribution=None):
         races = {"elf": Elf, "dwarf": Dwarf, "human": Human}
         classes = {"warrior": Warrior, "mage": Mage, "rogue": Rogue}
 
@@ -20,4 +20,4 @@ class CharacterFactory:
         race = races[race_type.lower()]()
         char_class = classes[class_type.lower()]()
 
-        return Character(name, race, class_type, distribution, strong_attribute)
+        return Character(name, race, char_class, distribution, attributes_distribution)

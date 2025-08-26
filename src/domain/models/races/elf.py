@@ -9,7 +9,7 @@ class Elf(Race):
             Ability("Keen Senses", 0, "Advantage on perception checks"),
             Ability("Magic Resistance", 0, "Advantage on saving throws against magic")
         ]
-        super().__init__("Elf", 9, True, "Chaotic Good", abilities)
+        super().__init__("Elf", 9, True, "Neutral", abilities)
 
     def attribute_bonus(self):
         return Attribute(dexterity=2, intelligence=1)

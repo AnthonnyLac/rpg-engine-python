@@ -4,32 +4,25 @@ from src.domain.models.charactersClass.warrior import Warrior
 from src.domain.models.charactersClass.rogue import Rogue
 
 class Character:
-    def __init__(self, name, race, char_class, attribute_distribution="classic", strong_attribute=None):
+    def __init__(self, name, race, char_class, attribute_distribution="classic", attributes_values=None):
         self.name = name
         self.race = race
-
+        self.char_class = char_class
+        
         # Atributos base
         if attribute_distribution == "classic":
-            base_attributes = AttributeDistribution.classic_distribution()
+            base_attributes = AttributeDistribution.classic_distribution(attributes_values)
         elif attribute_distribution == "heroic":
-            base_attributes = AttributeDistribution.heroic_distribution()
+            base_attributes = AttributeDistribution.heroic_distribution(attributes_values)
         elif attribute_distribution == "adventurer":
-            base_attributes = AttributeDistribution.adventurer_distribution(strong_attribute or "strength")
+            base_attributes = AttributeDistribution.adventurer_distribution(attributes_values)
         else:
             raise ValueError("Invalid attribute distribution")
 
-        # Classe
-        if char_class == "warrior":
-            self.char_class = Warrior()
-        elif char_class == "mage":
-            self.char_class = Mage()
-        elif char_class == "rogue":
-            self.char_class = Rogue()
-        else:
-            raise ValueError("Invalid class")
 
         # Atributos finais = base + raça + classe
-        self.attributes = base_attributes + self.race.attribute_bonus() + self.char_class.attribute_bonus()
+        #comentado somatoria de atributos
+        self.attributes = base_attributes #+ self.race.attribute_bonus() + self.char_class.attribute_bonus()
 
     def sheet(self):
             return (
