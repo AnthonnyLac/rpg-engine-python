@@ -6,7 +6,6 @@ def run_ui(ui):
     ui.start()
 
 def main():
-    # Cria repositório concreto (Infrastructure Layer)
     repository = SQLiteRepository("game.db")
     
     # Cria UI passando o repositório

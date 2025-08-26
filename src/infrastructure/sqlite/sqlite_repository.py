@@ -40,3 +40,11 @@ class SQLiteRepository(Repository):
         )
         row = cursor.fetchone()
         return json.loads(row[0]) if row else None
+
+    def list(self, entity_type: str):
+        cursor = self.conn.execute(
+            "SELECT data FROM entities WHERE entity_type=?",
+            (entity_type,)
+        )
+        rows = cursor.fetchall()
+        return [json.loads(row[0]) for row in rows]
