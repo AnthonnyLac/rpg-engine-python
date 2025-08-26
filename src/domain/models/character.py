@@ -1,6 +1,7 @@
-from src.domain.models.attribute import AttributeDistribution
-from src.domain.models.race import Elf, Dwarf, Human
-from src.domain.models.character_class import Warrior, Mage, Rogue
+from src.domain.models.atributes.attribute_distribution import AttributeDistribution
+from src.domain.models.charactersClass.mage import  Mage
+from src.domain.models.charactersClass.warrior import Warrior
+from src.domain.models.charactersClass.rogue import Rogue
 
 class Character:
     def __init__(self, name, race, char_class, attribute_distribution="classic", strong_attribute=None):

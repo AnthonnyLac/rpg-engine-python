@@ -1,5 +1,9 @@
-from src.domain.models.race import Elf, Dwarf, Human
-from src.domain.models.character_class import Warrior, Mage, Rogue
+from src.domain.models.races.dwarf import Dwarf
+from src.domain.models.races.elf import Elf
+from src.domain.models.races.human import Human
+from src.domain.models.charactersClass.mage import  Mage
+from src.domain.models.charactersClass.warrior import Warrior
+from src.domain.models.charactersClass.rogue import Rogue
 from src.domain.models.character import Character
 
 class CharacterFactory:
