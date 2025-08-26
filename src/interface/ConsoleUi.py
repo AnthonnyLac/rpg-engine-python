@@ -139,12 +139,19 @@ class ConsoleUi:
     @staticmethod
     def organize_attributes(rolls, distribution):
         
-        if (distribution == "classic"):
-            return rolls  # classic não precisa organizar
+  
         
         attributes_names = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
         attributes = {}
         available_rolls = rolls.copy()
+        
+        if distribution == "classic":
+            # No classic, os valores seguem a ordem natural STR → CHA
+            attributes = {attr: rolls[i] for i, attr in enumerate(attributes_names)}
+            print("\n--- Distribuição dos atributos (Classic) ---")
+            for attr, value in attributes.items():
+                print(f"{attr.capitalize()}: {value}")
+            return attributes
 
         print("\n--- Distribuição dos atributos ---")
         print(f"Rolagens disponíveis: {available_rolls}")
