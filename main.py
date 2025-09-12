@@ -1,18 +1,27 @@
-# main.py
+import os
 from src.infrastructure.sqlite.sqlite_repository import SQLiteRepository
-from src.interface.ConsoleUi import ConsoleUi
 
 def run_ui(ui):
     ui.start()
 
 def main():
     repository = SQLiteRepository("game.db")
-    
-    # Cria UI passando o repositório
-    console_ui = ConsoleUi(repository)
-    
-    # Roda a UI de forma genérica
-    run_ui(console_ui)
+    mode = os.getenv("RUN_MODE", "web").lower()
+
+    if mode == "cli":
+        # Import lazy para não trazer dependências web no modo CLI
+        from src.interface.ConsoleUi import ConsoleUi
+        console_ui = ConsoleUi(repository)
+        console_ui.start()
+
+    elif mode == "web":
+        # Import lazy para não quebrar CLI se Flask não estiver instalado
+        from src.interface.web.app import create_app
+        app = create_app(repository)
+        app.run(debug=True)
+
+    else:
+        raise ValueError(f"Modo inválido: {mode}. Use RUN_MODE=cli ou RUN_MODE=web.")
 
 if __name__ == "__main__":
     main()
