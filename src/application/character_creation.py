@@ -36,7 +36,7 @@ class CharacterCreationService:
 
     @staticmethod
     def get_all_characters(repository):
-        return repository.get_all_characters()
+        return repository.list("character")
 
     @staticmethod
     def get_character_by_id(repository, character_id):

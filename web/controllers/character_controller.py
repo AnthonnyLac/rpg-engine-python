@@ -9,8 +9,12 @@ VALID_CLASSES = ["warrior", "mage", "rogue"]
 VALID_DISTRIBUTIONS = ["classic", "heroic", "adventurer"]
 VALID_ATTRIBUTES = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
 
+@character_bp.route("/")
+def menu_principal():
+    return render_template("menu.html")
 
-@character_bp.route("/", methods=["GET"])
+
+@character_bp.route("/create-form", methods=["GET"])
 def create_character_form():
     return render_template("create_character.html",
                            races=VALID_RACES,
@@ -85,8 +89,7 @@ def create_character():
 
 @character_bp.route("/characters", methods=["GET"])
 def list_characters():
-    service = CharacterCreationService(current_app.repository)
-    characters = service.get_all_characters()
+    characters = CharacterCreationService.get_all_characters(current_app.repository)
     return render_template("character_list.html", characters=characters)
 
 
