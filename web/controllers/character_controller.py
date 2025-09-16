@@ -93,12 +93,3 @@ def list_characters():
     return render_template("character_list.html", characters=characters)
 
 
-@character_bp.route("/character/<int:character_id>", methods=["GET"])
-def character_detail(character_id):
-    service = CharacterCreationService(current_app.repository)
-    character = service.get_character_by_id(character_id)
-
-    if not character:
-        return jsonify({"error": "Personagem não encontrado"}), 404
-
-    return render_template("character_detail.html", character=character)
