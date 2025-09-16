@@ -1,4 +1,6 @@
 const VALID_ATTRIBUTES = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"];
+let availableRolls = [];
+let selectedValues = [];
 
 // Funções de rolagem de dados
 function rollD6() {
@@ -39,16 +41,11 @@ function organizeAttributesClassic(rolls) {
     return attributes;
 }
 
-function organizeAttributesManual(rolls) {
-    return {
-        availableRolls: rolls,
-        assignedAttributes: {}
-    };
-}
-
 async function rollDice() {
     const distribution = document.getElementById('distribution').value;
     const rolls = rollAttributes(distribution);
+    availableRolls = [...rolls]; // Mantém uma cópia dos rolls disponíveis
+    selectedValues = []; // Reseta os valores selecionados
 
     document.getElementById('rolls-display').innerText = `Rolagens: ${rolls.join(', ')}`;
     document.getElementById('rolls').value = JSON.stringify(rolls);
@@ -71,16 +68,20 @@ function displayAttributes(attributes) {
 }
 
 function setupManualDistribution(rolls) {
+    availableRolls = [...rolls]; // Inicializa os rolls disponíveis
+    selectedValues = []; // Reseta os valores selecionados
+
     let html = `
         <h3>Distribua os Valores Manualmente</h3>
         <p>Rolagens disponíveis: ${rolls.join(', ')}</p>
+        <p id="available-rolls">Valores restantes: ${availableRolls.join(', ')}</p>
     `;
 
     VALID_ATTRIBUTES.forEach(attr => {
         html += `
             <div class="attribute-row">
                 <label>${attr.charAt(0).toUpperCase() + attr.slice(1)}:</label>
-                <select name="${attr}">
+                <select name="${attr}" data-attribute="${attr}">
                     <option value="">Selecione um valor</option>
                     ${rolls.map(val => `<option value="${val}">${val}</option>`).join('')}
                 </select>
@@ -90,6 +91,64 @@ function setupManualDistribution(rolls) {
 
     document.getElementById('attributes-display').innerHTML = html;
     document.getElementById('rolls').value = JSON.stringify(rolls);
+}
+
+function updateAvailableOptions() {
+    // Coleta todos os valores já selecionados
+    selectedValues = [];
+    VALID_ATTRIBUTES.forEach(attr => {
+        const select = document.querySelector(`select[name="${attr}"]`);
+        if (select && select.value) {
+            selectedValues.push(parseInt(select.value));
+        }
+    });
+
+    // Cria uma cópia dos availableRolls para trabalhar
+    let remainingRolls = [...availableRolls];
+
+    // Remove apenas UMA ocorrência de cada valor selecionado
+    selectedValues.forEach(selectedValue => {
+        const index = remainingRolls.indexOf(selectedValue);
+        if (index !== -1) {
+            remainingRolls.splice(index, 1);
+        }
+    });
+
+    // Atualiza as opções disponíveis em cada select
+    VALID_ATTRIBUTES.forEach(attr => {
+        const select = document.querySelector(`select[name="${attr}"]`);
+        const currentValue = select.value ? parseInt(select.value) : null;
+
+        // Limpa as opções
+        select.innerHTML = '<option value="">Selecione um valor</option>';
+
+        // Adiciona os valores restantes + o valor atual deste select (se houver)
+        const optionsToAdd = [...remainingRolls];
+        if (currentValue) {
+            optionsToAdd.push(currentValue);
+        }
+
+        // Remove duplicatas e ordena
+        const uniqueOptions = [...new Set(optionsToAdd)].sort((a, b) => a - b);
+
+        uniqueOptions.forEach(val => {
+            const option = document.createElement('option');
+            option.value = val;
+            option.textContent = val;
+            select.appendChild(option);
+        });
+
+        // Restaura a seleção atual se ainda estiver disponível
+        if (currentValue && Array.from(select.options).some(opt => parseInt(opt.value) === currentValue)) {
+            select.value = currentValue;
+        } else {
+            select.value = "";
+        }
+    });
+
+    // Atualiza a exibição dos valores restantes
+    document.getElementById('available-rolls').textContent =
+        `Valores restantes: ${remainingRolls.length > 0 ? remainingRolls.join(', ') : 'Nenhum'}`;
 }
 
 function updateManualAttributes() {
@@ -108,6 +167,8 @@ function updateManualAttributes() {
     if (allSelected) {
         document.getElementById('attributes').value = JSON.stringify(attributes);
     }
+
+    updateAvailableOptions(); // Atualiza as opções disponíveis
 }
 
 async function submitCharacter(event) {
