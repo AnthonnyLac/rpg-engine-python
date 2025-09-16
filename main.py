@@ -16,7 +16,7 @@ def main():
 
     elif mode == "web":
         # Import lazy para não quebrar CLI se Flask não estiver instalado
-        from src.interface.web.app import create_app
+        from web.app import create_app
         app = create_app(repository)
         app.run(debug=True)
 

@@ -20,5 +20,24 @@ class CharacterCreationService:
                 # Se factory já retorna dict
                 repository.save("character", character)
         
-        return character            
- 
+        return character
+
+    @staticmethod
+    def _validate_attributes(attributes):
+        required_attrs = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
+
+        for attr in required_attrs:
+            if attr not in attributes or not isinstance(attributes[attr], int):
+                return False
+            if attributes[attr] < 3 or attributes[attr] > 18:
+                return False
+
+        return True
+
+    @staticmethod
+    def get_all_characters(repository):
+        return repository.get_all_characters()
+
+    @staticmethod
+    def get_character_by_id(repository, character_id):
+        return repository.get_character_by_id(character_id)

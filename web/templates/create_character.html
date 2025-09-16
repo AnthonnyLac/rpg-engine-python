@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Criar Personagem</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Criar Novo Personagem</h1>
+
+    <form id="character-form">
+        <div>
+            <label>Nome:</label>
+            <input type="text" name="name" required>
+        </div>
+
+        <div>
+            <label>Raça:</label>
+            <select name="race" required>
+                <option value="">Selecione uma raça</option>
+                {% for race in races %}
+                <option value="{{ race }}">{{ race.capitalize() }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label>Classe:</label>
+            <select name="class" required>
+                <option value="">Selecione uma classe</option>
+                {% for class in classes %}
+                <option value="{{ class }}">{{ class.capitalize() }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label>Distribuição:</label>
+            <select name="distribution" id="distribution" required>
+                <option value="">Selecione uma distribuição</option>
+                {% for dist in distributions %}
+                <option value="{{ dist }}">{{ dist.capitalize() }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="button" id="roll-button" style="display: none;">
+            Rolar Dados
+        </button>
+
+        <div id="rolls-display" style="margin: 10px 0;"></div>
+        <div id="attributes-display"></div>
+
+        <input type="hidden" id="rolls" name="rolls">
+        <input type="hidden" id="attributes" name="attributes">
+
+        <button type="submit" style="margin-top: 20px;">Criar Personagem</button>
+    </form>
+
+    <a href="{{ url_for('character.list_characters') }}">Ver todos os personagens</a>
+
+    <script src="{{ url_for('static', filename='js/character.js') }}"></script>
+</body>
+</html>
