@@ -187,7 +187,7 @@ async function submitCharacter(event) {
     };
 
     try {
-        const response = await fetch('/characters/create', {
+        const response = await fetch('create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

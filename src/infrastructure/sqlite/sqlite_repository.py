@@ -4,7 +4,7 @@ from src.infrastructure.repository.Repository import Repository
 
 class SQLiteRepository(Repository):
     def __init__(self, db_file="game.db"):
-        self.conn = sqlite3.connect(db_file)
+        self.conn = sqlite3.connect(db_file, check_same_thread=False)
         self.conn.execute("""
             CREATE TABLE IF NOT EXISTS entities (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,

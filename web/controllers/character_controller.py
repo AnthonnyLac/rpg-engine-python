@@ -62,20 +62,20 @@ def create_character():
                 return jsonify({"error": f"Atributo {attr} inválido"}), 400
 
         # Criar personagem usando o service
-        service = CharacterCreationService(current_app.repository)
         character_data = {
             "name": data["name"],
             "race": data["race"],
             "class": data["class"],
             "distribution": data["distribution"],
-            "attributes": attributes
+            "attributes_distribution": attributes
         }
 
-        character = service.create_character(character_data)
+        character = CharacterCreationService.create_character(character_data, current_app.repository)
+        character_dict = character.to_dict()
 
         return jsonify({
             "success": True,
-            "character": character,
+            "character": character_dict,
             "message": "Personagem criado com sucesso!"
         })
 
