@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Principal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
+</head>
+<body>
+    <div class="menu-container">
+        <div class="menu-header">
+            <h1>🎲 Sistema de Personagens</h1>
+            <p>Gerencie seus personagens de RPG</p>
+        </div>
+
+        <div class="menu-grid">
+            <div class="menu-card" onclick="navigateTo('/create-form')">
+                <div class="menu-icon">➕</div>
+                <h2>Criar Personagem</h2>
+                <p>Crie um novo personagem com atributos personalizados</p>
+            </div>
+
+            <div class="menu-card" onclick="navigateTo('/characters')">
+                <div class="menu-icon">📋</div>
+                <h2>Listar Personagens</h2>
+                <p>Visualize todos os personagens criados</p>
+            </div>
+
+            <div class="menu-card" onclick="showComingSoon()">
+                <div class="menu-icon">⚔️</div>
+                <h2>Combate</h2>
+                <p>Sistema de batalha entre personagens (Em breve)</p>
+            </div>
+
+            <div class="menu-card" onclick="showComingSoon()">
+                <div class="menu-icon">📊</div>
+                <h2>Estatísticas</h2>
+                <p>Estatísticas e análises dos personagens (Em breve)</p>
+            </div>
+
+            <div class="menu-card" onclick="showComingSoon()">
+                <div class="menu-icon">🛠️</div>
+                <h2>Configurações</h2>
+                <p>Configurações do sistema (Em breve)</p>
+            </div>
+
+            <div class="menu-card" onclick="showComingSoon()">
+                <div class="menu-icon">❓</div>
+                <h2>Ajuda</h2>
+                <p>Documentação e ajuda (Em breve)</p>
+            </div>
+        </div>
+
+        <div class="menu-footer">
+            <p>Sistema de Gerenciamento de Personagens RPG © 2025</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/menu.js') }}"></script>
+</body>
+</html>

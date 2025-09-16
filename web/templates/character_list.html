@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Personagens</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/character_list.css') }}">
+</head>
+<body>
+    <div class="characters-container">
+        <div class="page-header">
+            <h1>🎮 Lista de Personagens</h1>
+            <p>Gerencie todos os seus personagens criados</p>
+        </div>
+
+        <div class="stats-bar">
+            <div class="total-characters">
+                <strong>Total: {{ characters|length }} personagem(s)</strong>
+            </div>
+            <div class="actions">
+                <a href="" class="btn btn-primary">
+                    ➕ Criar Novo Personagem
+                </a>
+            </div>
+        </div>
+
+        {% if characters %}
+        <div class="characters-grid">
+            {% for character in characters %}
+            <div class="character-card">
+                <h2 class="character-name">{{ character.name }}</h2>
+
+                <div class="character-info">
+                    <strong>Raça:</strong> {{ character.race.name }}
+                </div>
+
+                <div class="character-info">
+                    <strong>Classe:</strong> {{ character.class.name }}
+                </div>
+
+
+                <h4>Atributos:</h4>
+                <div class="attributes-grid">
+                    {% for attr, value in character.attributes.items() %}
+                    <div class="attribute-item">
+                        <div class="attribute-value">{{ value }}</div>
+                        <div class="attribute-label">{{ attr[:3].upper() }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h3>Nenhum personagem encontrado</h3>
+            <p>Você ainda não criou nenhum personagem. Que tal começar agora?</p>
+            <a href="" class="btn btn-primary">
+                Criar Primeiro Personagem
+            </a>
+        </div>
+        {% endif %}
+
+        <div class="actions footer-actions">
+            <a href="/create-form" class="btn btn-primary">
+                ➕ Criar Novo Personagem
+            </a>
+            <a href="/" class="btn btn-secondary">
+                🏠 Voltar ao Início
+            </a>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/character_list.js') }}"></script>
+</body>
+</html>
